@@ -33,6 +33,7 @@ if($_SESSION['statut'] == "Visiteur"){
 				include("vues/v_erreurs.php");
 			}
 			else{
+				$dateFrais = $pdo->dateFrancaisVersAnglais($date);
 				$pdo->creeNouveauFraisHorsForfait($idVisiteur,$mois,$libelle,$dateFrais,$montant);
 			}
 			break;

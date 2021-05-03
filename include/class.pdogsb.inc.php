@@ -269,9 +269,8 @@ public function moisSuivant($mois)
  * @param $montant : le montant
 */
 	public function creeNouveauFraisHorsForfait($idVisiteur,$mois,$libelle,$date,$montant){
-		$dateFr = dateFrancaisVersAnglais($date);
 		$req = "insert into lignefraishorsforfait 
-		values('','$idVisiteur','$mois','$libelle','$dateFr','$montant')";
+		values('','$idVisiteur','$mois','$libelle','$date','$montant')";
 		PdoGsb::$monPdo->exec($req);
 	}
 /**
@@ -626,7 +625,7 @@ public function ValiderModifFicheHF($id, $date,$libelle,$montant){
 
 	$req = PdoGsb::$monPdo->prepare("UPDATE lignefraishorsforfait
 	SET date = :mois , libelle = :libelle, montant = :montant
-	WHERE id = :id") ;
+	WHERE id = :id");
 
 
 	$req->bindParam(':mois', $date, PDO::PARAM_STR);
@@ -692,9 +691,9 @@ public function ChangerEtatFicheFraisWithIdVEtMois($idVisiteur ,$mois,$etat){
 Créer la fiche de frais du mois suivant pour l'utilisateur en argument
  * @param $idVisiteur 
 */
-public function CreerNouvelleFicheFrais($idVisiteur){
+public function CreerNouvelleFicheFrais($idVisiteur,$moisSuivant){
 
-	$mois = $this->moisSuivant($this->dernierMoisSaisi($idVisiteur));
+	//$mois = $this->moisSuivant($this->dernierMoisSaisi($idVisiteur));
 
 	$req = PdoGsb::$monPdo->prepare("
 	INSERT INTO fichefrais 
@@ -702,10 +701,20 @@ public function CreerNouvelleFicheFrais($idVisiteur){
 	");
 
 	$req->bindParam(':idVisiteur', $idVisiteur, PDO::PARAM_STR_CHAR);
-	$req->bindParam(':mois', $mois, PDO::PARAM_STR_CHAR);
+	$req->bindParam(':mois', $moisSuivant, PDO::PARAM_STR_CHAR);
 
 	$req->execute();
 }
+
+public static function query($elem)
+        {
+        return PdoGsb::$monPdo->query($elem);
+        }
+
+public static function prepare($elem)
+        {
+        return PdoGsb::$monPdo->prepare($elem);
+        }
 
 
 
